@@ -31,6 +31,13 @@ jobs:
         with: 
           node-version: '14'
 
+      - name: Setup GitHub SSH
+        uses: MrSquaare/ssh-setup-action@v1
+        with:
+          host: github.com
+          private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
+          private-key-name: ssh_gitHub
+
       - name: Create env file
         run: cp .env.dist .env.test
         
