@@ -17,13 +17,12 @@ on:
 env:
   fe_repos: |
    ["beprems/KYB-white-label", "bepres/KYB-lbp-front"]
-    
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    # if: ${{ contains(env.fe_repos, github.event.action) }}
+    if: contains("beprems/KYB-white-label", github.event.action)
     
     runs-on: ubuntu-latest
 
