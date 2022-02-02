@@ -17,8 +17,16 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
+    env:
+        REPOS: |
+          [
+            "beprems/KYB-lbp-front",
+            "beprems/KYB-white-label"
+          ]
+
     # The type of runner that the job will run on
-    if: ${{ contains( ["beprems/KYB-lbp-front", "beprems/KYB-white-label"], github.event.action) }}
+    if: ${{ contains(env.REPOS, github.event.action) }}
+    
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
