@@ -18,12 +18,12 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    if: ${{ contains(github.event.action, 'beprems/') }}
+    if: ${{ contains( ['beprems/KYB-lbp-front', 'beprems/KYB-white-label'], github.event.action) }}
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Checkout private tools
+      - name: Checkout repo ${{ github.event.action }}
         uses: actions/checkout@v2
         with:
           repository: ${{ github.event.action }}
