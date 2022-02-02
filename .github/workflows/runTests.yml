@@ -22,7 +22,7 @@ jobs:
 #        repo: [ 'beprems/KYB-white-label', 'beprems/KYB-lbp-front' ]
         
     # The type of runner that the job will run on
-    if: 'beprems/KYB-white-label' == github.event.action || 'beprems/KYB-lbp-front' == github.event.action
+    if: ('beprems/KYB-white-label' == github.event.action) || ('beprems/KYB-lbp-front' == github.event.action)
     #    if: contains(matrix.repo, github.event.action)
     
     runs-on: ubuntu-latest
