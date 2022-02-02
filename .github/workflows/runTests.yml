@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    if: ('beprems/KYB-white-label' == github.event.action) || ('beprems/KYB-lbp-front' == github.event.action)
+    if: 'beprems/front_traitement_agent' == github.event.action
     runs-on: ubuntu-latest
 
     steps:
