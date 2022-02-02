@@ -12,31 +12,31 @@ jobs:
 
     steps:
       - name: Checkout repo ${{ github.event.action }}
-       uses: actions/checkout@v2
-       with:
-         repository: ${{ github.event.action }}
-         ref: develop
-         token: ${{ secrets.GH_PAT }}
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event.action }}
+          ref: develop
+          token: ${{ secrets.GH_PAT }}
       
       - uses: actions/setup-node@v2
-       with: 
-         node-version: '14'
+        with: 
+          node-version: '14'
       
       - name: Setup GitHub SSH
-       uses: MrSquaare/ssh-setup-action@v1
-       with:
-         host: github.com
-         private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
-         private-key-name: ssh_gitHub
+        uses: MrSquaare/ssh-setup-action@v1
+        with:
+          host: github.com
+          private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
+          private-key-name: ssh_gitHub
       
       - name: Create env file
-       run: cp .env.dist .env.test
+        run: cp .env.dist .env.test
       
       - name: Run npm install
-       run: npm ci
+        run: npm ci
       
       - name: Run lint
-       run: npm run lint
+        run: npm run lint
       
       - name: Run tests
-       run: npm run test-ci
+        run: npm run test-ci
