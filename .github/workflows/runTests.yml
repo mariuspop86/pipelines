@@ -23,7 +23,7 @@ jobs:
   build:
     # The type of runner that the job will run on
     # if: contains('beprems/KYB-white-label', github.event.action)
-    if: contains(['beprems/KYB-white-label', 'beprems/KYB-lbp-front'], github.event.action)
+    if: contains(|['beprems/KYB-white-label', 'beprems/KYB-lbp-front'], github.event.action)
     
     runs-on: ubuntu-latest
 
