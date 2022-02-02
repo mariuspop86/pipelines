@@ -8,29 +8,29 @@ on:
   pull_request:
     branches: [ recette, develop ]
 
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
   repository_dispatch:
 
-env:
-  REPO: 'beprems/KYB-white-label'
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
+    strategy:
+      matrix:
+        repo: [ 'beprems/KYB-white-label', 'beprems/KYB-lbp-front' ]
+        
     # The type of runner that the job will run on
     # if: contains('beprems/KYB-white-label', github.event.action)
-    if: ${{ env.REPO == github.event.action }}
+    if: contains(matrix.repo, github.event.action)
     
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Dump matrix context
-        run: echo '${{ toJSON(env.fe_repos) }}'
+        run: echo '${{ toJSON(matrix) }}'
       # - name: Checkout repo ${{ github.event.action }}
       #   uses: actions/checkout@v2
       #   with:
