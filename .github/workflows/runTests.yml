@@ -6,10 +6,9 @@ on:
   repository_dispatch:
 
 jobs:
-  build:
+  cypress-run:
     if: ('beprems/front_traitement_agent' == github.event.action)
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo ${{ github.event.action }}
         uses: actions/checkout@v2
@@ -17,6 +16,8 @@ jobs:
           repository: ${{ github.event.action }}
           ref: develop
           token: ${{ secrets.GH_PAT }}
+      # Install NPM dependencies, cache them correctly
+      # and run all Cypress tests
       
       - uses: actions/setup-node@v2
         with: 
@@ -34,9 +35,45 @@ jobs:
       
       - name: Run npm install
         run: npm ci
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          build: npm run build
+          start: npm start
+
+  # build:
+  #   if: ('beprems/front_traitement_agent' == github.event.action)
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Checkout repo ${{ github.event.action }}
+  #       uses: actions/checkout@v2
+  #       with:
+  #         repository: ${{ github.event.action }}
+  #         ref: develop
+  #         token: ${{ secrets.GH_PAT }}
       
-      - name: Run lint
-        run: npm run lint
+  #     - uses: actions/setup-node@v2
+  #       with: 
+  #         node-version: '14'
       
-      - name: Run tests
-        run: npm run test-ci
+  #     - name: Setup GitHub SSH
+  #       uses: MrSquaare/ssh-setup-action@v1
+  #       with:
+  #         host: github.com
+  #         private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
+  #         private-key-name: ssh_gitHub
+      
+  #     - name: Create env file
+  #       run: cp .env.dist .env.test
+      
+  #     - name: Run npm install
+  #       run: npm ci
+      
+  #     - name: Run lint
+  #       run: npm run lint
+      
+  #     - name: Run tests
+  #       run: npm run test-ci
+
