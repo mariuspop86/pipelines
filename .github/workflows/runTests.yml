@@ -1,62 +1,42 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Run tests
-
-# Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   pull_request:
     branches: [ recette, develop ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
   repository_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-#    strategy:
-#      matrix:
-#        repo: [ 'beprems/KYB-white-label', 'beprems/KYB-lbp-front' ]
-        
-    # The type of runner that the job will run on
     if: ('beprems/KYB-white-label' == github.event.action) || ('beprems/KYB-lbp-front' == github.event.action)
-    #    if: contains(matrix.repo, github.event.action)
-    
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Dump matrix context
-        run: echo '${{ toJSON(matrix) }}'
-      # - name: Checkout repo ${{ github.event.action }}
-      #   uses: actions/checkout@v2
-      #   with:
-      #     repository: ${{ github.event.action }}
-      #     ref: develop
-      #     token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
-
-      # - uses: actions/setup-node@v2
-      #   with: 
-      #     node-version: '14'
-
-      # - name: Setup GitHub SSH
-      #   uses: MrSquaare/ssh-setup-action@v1
-      #   with:
-      #     host: github.com
-      #     private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
-      #     private-key-name: ssh_gitHub
-
-      # - name: Create env file
-      #   run: cp .env.dist .env.test
-        
-      # - name: Run npm install
-      #   run: npm ci
-        
-      # - name: Run lint
-      #   run: npm run lint
-
-      # - name: Run tests
-      #   run: npm run test-ci
+      - name: Checkout repo ${{ github.event.action }}
+       uses: actions/checkout@v2
+       with:
+         repository: ${{ github.event.action }}
+         ref: develop
+         token: ${{ secrets.GH_PAT }}
+      
+      - uses: actions/setup-node@v2
+       with: 
+         node-version: '14'
+      
+      - name: Setup GitHub SSH
+       uses: MrSquaare/ssh-setup-action@v1
+       with:
+         host: github.com
+         private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
+         private-key-name: ssh_gitHub
+      
+      - name: Create env file
+       run: cp .env.dist .env.test
+      
+      - name: Run npm install
+       run: npm ci
+      
+      - name: Run lint
+       run: npm run lint
+      
+      - name: Run tests
+       run: npm run test-ci
