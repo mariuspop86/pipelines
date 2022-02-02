@@ -18,39 +18,37 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
+    if: ${{ contains(github.event.action, 'beprems/') }}
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Dump github event context
-        run: echo '${{ toJSON(github.event) }}'
+      - name: Checkout private tools
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event.action }}
+          ref: develop
+          token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
 
-      # - name: Checkout private tools
-      #   uses: actions/checkout@v2
-      #   with:
-      #     repository: beprems/KYB-lbp-front
-      #     ref: develop
-      #     token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
+      - uses: actions/setup-node@v2
+        with: 
+          node-version: '14'
 
-      # - uses: actions/setup-node@v2
-      #   with: 
-      #     node-version: '14'
+      - name: Setup GitHub SSH
+        uses: MrSquaare/ssh-setup-action@v1
+        with:
+          host: github.com
+          private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
+          private-key-name: ssh_gitHub
 
-      # - name: Setup GitHub SSH
-      #   uses: MrSquaare/ssh-setup-action@v1
-      #   with:
-      #     host: github.com
-      #     private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
-      #     private-key-name: ssh_gitHub
-
-      # - name: Create env file
-      #   run: cp .env.dist .env.test
+      - name: Create env file
+        run: cp .env.dist .env.test
         
-      # - name: Run npm install
-      #   run: npm ci
+      - name: Run npm install
+        run: npm ci
         
-      # - name: Run lint
-      #   run: npm run lint
+      - name: Run lint
+        run: npm run lint
 
-      # - name: Run tests
-      #   run: npm run test-ci
+      - name: Run tests
+        run: npm run test-ci
