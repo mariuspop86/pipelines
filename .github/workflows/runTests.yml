@@ -15,7 +15,8 @@ on:
   repository_dispatch:
 
 env:
-  fe_repos: ["beprems/KYB-white-label", "bepres/KYB-lbp-front"]
+  fe_repos: |
+   ["beprems/KYB-white-label", "bepres/KYB-lbp-front"]
     
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
