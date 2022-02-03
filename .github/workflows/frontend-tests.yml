@@ -1,7 +1,5 @@
 name: Run tests
 on:
-  pull_request:
-    branches: [ recette, develop ]
   workflow_dispatch:
   repository_dispatch:
 
@@ -43,30 +41,3 @@ jobs:
           build: npm run build
           start: npm start
           wait-on: 'http://localhost:3000'
-  
-  bo_traitement_agent-test-run:
-    if: ('beprems/bo_traitement_agent' == github.event.action)
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repo ${{ github.event.action }}
-        uses: actions/checkout@v2
-        with:
-          repository: ${{ github.event.action }}
-          ref: ${{ github.event.client_payload.branch }}
-          token: ${{ secrets.GH_PAT }}
-          
-      - name: Setup GitHub SSH
-        uses: MrSquaare/ssh-setup-action@v1
-        with:
-          host: github.com
-          private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
-          private-key-name: ssh_gitHub
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
-
-      - name: Run test
-        run: php bin/phpunit
-      
-
