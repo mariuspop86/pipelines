@@ -1,4 +1,4 @@
-name: Run tests
+name: Run back end tests
 on:
   workflow_dispatch:
   repository_dispatch:
