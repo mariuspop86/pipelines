@@ -9,6 +9,10 @@ jobs:
   cypress-run:
     if: ('beprems/front_traitement_agent' == github.event.action)
     runs-on: ubuntu-latest
+    env:
+      REACT_APP_API_BASE_URL: 'https://back-bo-traitement-dev.wks-recette.com/api/v1'
+      REACT_APP_AUTH_TOKEN: 'X-Auth-Token'
+      
     steps:
       - name: Checkout repo ${{ github.event.action }}
         uses: actions/checkout@v2
@@ -31,9 +35,7 @@ jobs:
           private-key-name: ssh_gitHub
       
       - name: Create env file
-        run: |
-          cp .env.dist .env.test
-          echo '${{ toJSON(env) }}'
+        run: cp .env.dist .env.test
       
       - name: Run npm install
         run: |
