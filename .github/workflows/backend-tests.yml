@@ -2,10 +2,11 @@ name: Run back end tests
 on:
   workflow_dispatch:
   repository_dispatch:
+    types: [beprems/bo_traitement_agent]
 
 jobs:
   bo_traitement_agent-test-run:
-    if: ('beprems/bo_traitement_agent' == github.event.action)
+#    if: ('beprems/bo_traitement_agent' == github.event.action)
     runs-on: ubuntu-latest
 
     steps:
@@ -25,6 +26,9 @@ jobs:
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Generate JWT
+        run: bin/console lexik:jwt:generate-keypair --skip-if-exists
 
       - name: Run test
         run: php bin/phpunit
