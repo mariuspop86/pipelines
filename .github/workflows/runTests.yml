@@ -53,8 +53,15 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: ${{ github.event.action }}
-          ref: develop
+          ref: ${{ github.event.client_payload.branch }}
           token: ${{ secrets.GH_PAT }}
+          
+      - name: Setup GitHub SSH
+        uses: MrSquaare/ssh-setup-action@v1
+        with:
+          host: github.com
+          private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
+          private-key-name: ssh_gitHub
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
