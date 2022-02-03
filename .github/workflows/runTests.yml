@@ -31,10 +31,14 @@ jobs:
           private-key-name: ssh_gitHub
       
       - name: Create env file
-        run: cp .env.dist .env.test
+        run: |
+          cp .env.dist .env.test
+          echo '${{ toJSON(env) }}'
       
       - name: Run npm install
-        run: npm ci
+        run: |
+          npm ci
+          echo '${{ toJSON(env) }}'
 
       - name: Cypress run
         uses: cypress-io/github-action@v2
