@@ -29,7 +29,9 @@ jobs:
           private-key-name: ssh_gitHub
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: |
+        composer install --prefer-dist --no-progress --no-suggest
+        composer update kyc/internal-api-bundle
 
       - name: Generate JWT
         run: bin/console lexik:jwt:generate-keypair --skip-if-exists
