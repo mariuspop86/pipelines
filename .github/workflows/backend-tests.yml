@@ -73,8 +73,13 @@ jobs:
       - name: curl
         uses: wei/curl@master
         with:
-          args: http://localhost:8080
-          
+          args: http://localhost:8084
+
+      - name: curl
+        uses: wei/curl@master
+        with:
+          args: :::8080
+
       - name: Run test
         run: php bin/phpunit
         
