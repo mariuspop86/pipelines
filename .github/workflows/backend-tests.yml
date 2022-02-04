@@ -54,8 +54,8 @@ jobs:
           # Defaults to 8888
           http-port: 8080
 
-#      - name: Install dependencies
-#        run: composer install --prefer-dist --no-progress --no-suggest
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Generate JWT
         run: bin/console lexik:jwt:generate-keypair --skip-if-exists
