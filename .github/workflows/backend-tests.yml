@@ -29,12 +29,16 @@ jobs:
           private-key-name: ssh_gitHub
 
       - name: Install dependencies
-        run: |
-          composer install --prefer-dist --no-progress --no-suggest
-          composer update kyc/internal-api-bundle
+        run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Generate JWT
         run: bin/console lexik:jwt:generate-keypair --skip-if-exists
 
-      - name: Run test
-        run: php bin/phpunit
+      - name: debug
+        run: ls -la vendor/kyc
+        
+#      - name: Run test
+#        run: php bin/phpunit
+        
+      - name: PHPUnit
+        uses: chindit/actions-phpunit-symfony@master
