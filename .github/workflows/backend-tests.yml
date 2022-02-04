@@ -21,18 +21,18 @@ jobs:
           ref: ${{ github.event.client_payload.branch }}
           token: ${{ secrets.GH_PAT }}
 
-      - name: Setup PHP, extensions and composer with shivammathur/setup-php
-        uses: shivammathur/setup-php@verbose
-        with:
-          php-version: 7.4
-          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, bcmath, gettext
-
       - name: Setup GitHub SSH
         uses: MrSquaare/ssh-setup-action@v1
         with:
           host: github.com
           private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
           private-key-name: ssh_gitHub
+
+      - name: Setup PHP, extensions and composer with shivammathur/setup-php
+        uses: php-actions/composer@v5
+        with:
+          php-version: 7.4
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, bcmath, gettext
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
