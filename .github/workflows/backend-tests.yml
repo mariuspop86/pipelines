@@ -28,59 +28,68 @@ jobs:
           host: github.com
           private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
           private-key-name: ssh_gitHub
-
-      - name: Debug
-        run: pwd
+#
+#      - name: Debug
+#        run: pwd
         
-      - name: Setup with tools
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.4
-          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, bcmath, gettext
-          ssh_key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
-          ssh_key_pub: ${{ secrets.SSH_GITHUB_PUBLIC_KEY }}
-          tools: phpunit, symfony, symfony-cli, composer, composer-require-checker
+#      - name: Setup with tools
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: 7.4
+#          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, bcmath, gettext
+#          ssh_key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
+#          ssh_key_pub: ${{ secrets.SSH_GITHUB_PUBLIC_KEY }}
+#          tools: phpunit, symfony, symfony-cli, composer, composer-require-checker
 
-      - name: Debug
-        run: |
-          pwd
-          ls -la
+#      - name: Debug
+#        run: |
+#          pwd
+#          ls -la
           
-      - name: Setup Apache
-        uses: thunder/apache-shiva-php-action@v1
-        with:
-          php-version: '7.4'
-          site-directory: /home/runner/work/pipelines/pipelines/public
-          # Defaults to 8888
-          http-port: 8088
+#      - name: Setup Apache
+#        uses: thunder/apache-shiva-php-action@v1
+#        with:
+#          php-version: '7.4'
+#          site-directory: /home/runner/work/pipelines/pipelines/public
+#          # Defaults to 8888
+#          http-port: 8088
+#
+#      - name: Install dependencies
+#        run: composer install --prefer-dist --no-progress --no-suggest
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+#      - name: Generate JWT
+#        run: bin/console lexik:jwt:generate-keypair --skip-if-exists
+      - name: Build containers
+        run: docker-compose build
 
-      - name: Generate JWT
-        run: bin/console lexik:jwt:generate-keypair --skip-if-exists
+      - name: Build containers
+        run: configure-app
+      - name: Build containers
+        run: generate-jwt-keys
 
-      - name: Symfony web
-        run: symfony serve --port 8080 -d
+      - name: Start all container
+        run: docker-compose up -d
         
-      - name: web server
-        run: | 
-          ps aux
-          netstat -tunlp
-        
+      - name: run test
+        run: make run-test
+#
+#      - name: Symfony web
+#        run: symfony serve --port 8080 -d
+#        
+#      - name: web server
+#        run: | 
+#          ps aux
+#          netstat -tunlp
+#        
 #      - name: run curl
 #        run: curl -X http://localhost:8080/api/v1/administrators
-      - name: curl
-        uses: wei/curl@master
-        with:
-          args: http://localhost:8084
 
-      - name: curl
-        uses: wei/curl@master
-        with:
-          args: :::8080
-
-      - name: Run test
-        run: php bin/phpunit
+#      - name: curl
+#        uses: wei/curl@master
+#        with:
+#          args: :::8080
+#
+#      - name: Run test
+#        run: php bin/phpunit
         
      
