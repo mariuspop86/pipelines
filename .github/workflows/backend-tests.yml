@@ -29,13 +29,22 @@ jobs:
 #          private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
 #          private-key-name: ssh_gitHub
 
-      - name: Setup PHP, extensions and composer with shivammathur/setup-php
-        uses: php-actions/composer@v5
+      - name: Setup with tools
+        uses: shivammathur/setup-php@v2
         with:
           php-version: 7.4
           extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, bcmath, gettext
           ssh_key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
           ssh_key_pub: ${{ secrets.SSH_GITHUB_PUBLIC_KEY }}
+          tools: phpunit, symfony, symfony-cli, composer, composer-require-checker
+          
+      - name: Setup Apache
+        uses: thunder/apache-shiva-php-action@v1
+        with:
+          php-version: '7.4'
+          site-directory: /home/runner/work/pipelines/pipelines/bo_traitement_agent
+          # Defaults to 8888
+          http-port: 8080
 
 #      - name: Install dependencies
 #        run: composer install --prefer-dist --no-progress --no-suggest
@@ -43,28 +52,11 @@ jobs:
       - name: Generate JWT
         run: bin/console lexik:jwt:generate-keypair --skip-if-exists
 
-      - name: install symofony cli
-        run: |
-          echo 'deb [trusted=yes] https://repo.symfony.com/apt/ /' | sudo tee /etc/apt/sources.list.d/symfony-cli.list
-          sudo apt update
-          sudo apt install symfony-cli
-
-      - name: Check Symfony requirements
-        run: vendor/bin/requirements-checker
-
-      - name: Check the Symfony console
-        run: |
-          bin/console about
-          bin/console strangebuzz:version
-
-      - name: start server
-        run: symfony server:start -d
-
       - name: web server
         run: ps aux 
         
       - name: run curl
-        run: curl -X http://localhost/api/v1/administrators
+        run: curl -X http://localhost:8080/api/v1/administrators
         
       - name: Run test
         run: php bin/phpunit
