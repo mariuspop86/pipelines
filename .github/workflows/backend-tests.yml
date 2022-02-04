@@ -62,14 +62,14 @@ jobs:
       - name: Build containers
         run: docker-compose build
 
-      - name: Build containers
-        run: configure-app
-      - name: Build containers
-        run: generate-jwt-keys
-
       - name: Start all container
         run: docker-compose up -d
         
+      - name: Build containers
+        run: make configure-app
+      - name: Build containers
+        run: make generate-jwt-keys
+
       - name: run test
         run: make run-test
 #
