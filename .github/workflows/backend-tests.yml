@@ -47,13 +47,27 @@ jobs:
         run: |
           echo 'deb [trusted=yes] https://repo.symfony.com/apt/ /' | sudo tee /etc/apt/sources.list.d/symfony-cli.list
           sudo apt update
-          sudo apt install symfony-cli 
-          
+          sudo apt install symfony-cli
+
+      - name: Check Symfony requirements
+        run: vendor/bin/requirements-checker
+
+      - name: Check the Symfony console
+        run: |
+          bin/console about
+          bin/console strangebuzz:version
+
       - name: start server
         run: |
           symfony server:start -d
-          symfony server:log
+#          symfony server:log
 
+      -name: web server
+        run: ps aux 
+        
+      - name: run curl
+        run: curl -X http://localhost/api/v1/administrators
+        
       - name: Run test
         run: php bin/phpunit
         
