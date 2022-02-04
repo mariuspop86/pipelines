@@ -12,6 +12,7 @@ jobs:
       INTERNAL_API_URL: 'http://app.local'
       INTERNAL_API_APP_ID: 'app_id'
       INTERNAL_API_APP_KEY: 'app_key'
+      APP_ENV: 'test'
 
     steps:
       - name: Checkout repo ${{ github.event.action }}
