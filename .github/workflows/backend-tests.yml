@@ -52,7 +52,7 @@ jobs:
           php-version: '7.4'
           site-directory: /home/runner/work/pipelines/pipelines
           # Defaults to 8888
-          http-port: 8080
+          http-port: 80
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
