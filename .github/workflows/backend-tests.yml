@@ -20,13 +20,13 @@ jobs:
           repository: ${{ github.event.action }}
           ref: ${{ github.event.client_payload.branch }}
           token: ${{ secrets.GH_PAT }}
-
-      - name: Setup GitHub SSH
-        uses: MrSquaare/ssh-setup-action@v1
-        with:
-          host: github.com
-          private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
-          private-key-name: ssh_gitHub
+#
+#      - name: Setup GitHub SSH
+#        uses: MrSquaare/ssh-setup-action@v1
+#        with:
+#          host: github.com
+#          private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
+#          private-key-name: ssh_gitHub
 
       - name: Setup PHP, extensions and composer with shivammathur/setup-php
         uses: php-actions/composer@v5
