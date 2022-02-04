@@ -22,7 +22,7 @@ jobs:
           token: ${{ secrets.GH_PAT }}
 
       - name: Setup PHP, extensions and composer with shivammathur/setup-php
-        uses: php-actions/composer@v5
+        uses: shivammathur/setup-php@verbose
         with:
           php-version: 7.4
           extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, bcmath, gettext
@@ -43,11 +43,7 @@ jobs:
       - name: debug
         run: ls -la vendor/kyc
         
-#      - name: Run test
-#        run: php bin/phpunit
+      - name: Run test
+        run: php bin/phpunit
         
-      - name: PHP unit tests with PHPUnit
-        uses: php-actions/phpunit@v2
-        with:
-          configuration: phpunit.xml
      
