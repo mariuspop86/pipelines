@@ -36,8 +36,8 @@ jobs:
           ssh_key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
           ssh_key_pub: ${{ secrets.SSH_GITHUB_PUBLIC_KEY }}
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+#      - name: Install dependencies
+#        run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Generate JWT
         run: bin/console lexik:jwt:generate-keypair --skip-if-exists
