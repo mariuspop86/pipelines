@@ -43,9 +43,15 @@ jobs:
       - name: Generate JWT
         run: bin/console lexik:jwt:generate-keypair --skip-if-exists
 
-      - name: debug
-        run: ls -la vendor/kyc
-        
+      - name: install symofony cli
+        run: |
+          echo 'deb [trusted=yes] https://repo.symfony.com/apt/ /' | sudo tee /etc/apt/sources.list.d/symfony-cli.list
+          sudo apt update
+          sudo apt install symfony-cli 
+          
+      - name: start server
+        run: symfony server:start -d
+          
       - name: Run test
         run: php bin/phpunit
         
