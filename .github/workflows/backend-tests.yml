@@ -29,6 +29,9 @@ jobs:
 #          private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
 #          private-key-name: ssh_gitHub
 
+      - name: Debug
+        run: pwd
+        
       - name: Setup with tools
         uses: shivammathur/setup-php@v2
         with:
@@ -37,12 +40,17 @@ jobs:
           ssh_key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
           ssh_key_pub: ${{ secrets.SSH_GITHUB_PUBLIC_KEY }}
           tools: phpunit, symfony, symfony-cli, composer, composer-require-checker
+
+      - name: Debug
+        run: |
+          pwd
+          ls -la
           
       - name: Setup Apache
         uses: thunder/apache-shiva-php-action@v1
         with:
           php-version: '7.4'
-          site-directory: /home/runner/work/pipelines/pipelines/bo_traitement_agent
+          site-directory: /home/runner/work/pipelines/pipelines
           # Defaults to 8888
           http-port: 8080
 
