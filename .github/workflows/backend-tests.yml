@@ -33,6 +33,8 @@ jobs:
         with:
           php-version: 7.4
           extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, bcmath, gettext
+          ssh_key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
+          ssh_key_pub: ${{ secrets.SSH_GITHUB_PUBLIC_KEY }}
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
