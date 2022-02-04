@@ -61,7 +61,7 @@ jobs:
         run: bin/console lexik:jwt:generate-keypair --skip-if-exists
 
       - name: Symfony web
-        run: symfony serve --port 8080
+        run: symfony serve --port 8080 -d
         
       - name: web server
         run: | 
