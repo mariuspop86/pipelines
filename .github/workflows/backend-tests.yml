@@ -61,7 +61,7 @@ jobs:
         run: bin/console lexik:jwt:generate-keypair --skip-if-exists
 
       - name: Symfony web
-        run: symfony server:start -d
+        run: symfony server:start -d *:8000
         
       - name: web server
         run: ps aux
