@@ -58,11 +58,9 @@ jobs:
           bin/console strangebuzz:version
 
       - name: start server
-        run: |
-          symfony server:start -d
-#          symfony server:log
+        run: symfony server:start -d
 
-      -name: web server
+      - name: web server
         run: ps aux 
         
       - name: run curl
