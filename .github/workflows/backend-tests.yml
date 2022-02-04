@@ -50,7 +50,7 @@ jobs:
           sudo apt install symfony-cli 
           
       - name: start server
-        run: symfony server:start -d
+        run: symfony server:start 
           
       - name: Run test
         run: php bin/phpunit
