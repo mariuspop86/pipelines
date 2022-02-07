@@ -6,13 +6,12 @@ on:
 
 jobs:
   bo_traitement_agent-test-run:
-#    if: ('beprems/bo_traitement_agent' == github.event.action)
     runs-on: ubuntu-latest
-    env:
-      INTERNAL_API_URL: 'http://app.local'
-      INTERNAL_API_APP_ID: 'app_id'
-      INTERNAL_API_APP_KEY: 'app_key'
-      APP_ENV: 'test'
+#    env:
+#      INTERNAL_API_URL: 'http://app.local'
+#      INTERNAL_API_APP_ID: 'app_id'
+#      INTERNAL_API_APP_KEY: 'app_key'
+#      APP_ENV: 'test'
 
     steps:
       - name: Checkout repo ${{ github.event.action }}
@@ -32,9 +31,6 @@ jobs:
       - uses: satackey/action-docker-layer-caching@v0.0.11
         # Ignore the failure of a step and avoid terminating the job.
         continue-on-error: true
-#
-      - name: Debug
-        run: pwd
         
       - name: Setup with tools
         uses: shivammathur/setup-php@v2
@@ -43,11 +39,12 @@ jobs:
           extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, bcmath, gettext
           ssh_key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
           ssh_key_pub: ${{ secrets.SSH_GITHUB_PUBLIC_KEY }}
-          tools: phpunit-bridge, symfony, symfony-cli, composer, composer-require-checker
+          tools: composer
       
       - name: Get composer cache directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
       - name: Cache composer dependencies
         uses: actions/cache@v2
         with:
@@ -57,73 +54,20 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
-
-        #      - name: Debug
-#        run: |
-#          pwd
-#          ls -la
-          
-#      - name: Setup Apache
-#        uses: thunder/apache-shiva-php-action@v1
-#        with:
-#          php-version: '7.4'
-#          site-directory: /home/runner/work/pipelines/pipelines/public
-#          # Defaults to 8888
-#          http-port: 8088
-#
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
 
-#      - name: Generate JWT
-#        run: bin/console lexik:jwt:generate-keypair --skip-if-exists
       - name: Build and start containers
         run: docker-compose -f "docker-compose-test.yaml" up -d --build
-#        run: docker-compose build -f /home/runner/work/pipelines/pipelines/docker-compose-test.yaml
-#
-#      - name: Start all container
-#        run: docker-compose up -d -f /home/runner/work/pipelines/pipelines/docker-compose-test.yaml
-#        
-#      - name: Build containers
-#        shell: 'script --return --quiet --command "bash {0}"'
-#        run: docker-compose exec app composer install
+
       - name: Generate Keys
         shell: 'script --return --quiet --command "bash {0}"'
         run: docker-compose exec app bin/console lexik:jwt:generate-keypair --skip-if-exists
-#
-      - name: Docker containers
-        run: docker ps -a
-      - name: web server
-        run: netstat -tunlp
-        
-      - name: web server
-        run: ls -la /home/runner/work/pipelines/pipelines/vendor
 
       - name: run test
-        shell: 'script --return --quiet --command "bash {0}"'
+        shell: 'script --return --quiet --command "bash {0}"' # hack to see the tty
         run: docker-compose exec app php bin/phpunit
-#        run: php bin/phpunit
 
       - name: Stop containers
         if: always()
         run: docker-compose -f "docker-compose-test.yaml" down
-#]
-#      - name: Install PHPUnit
-#        run: simple-phpunit install
-#        
-#      - name: Symfony web
-#        run: symfony serve --port 8080 -d
-#      - name: web server
-#        run: netstat -tunlp
-#      - name: run curl
-#        run: curl -X http://localhost:8080/api/v1/administrators
-
-#      - name: curl
-#        uses: wei/curl@master
-#        with:
-#          args: http://[::1]:8080
-
-#      - name: Run test
-#        run: simple-phpunit
-#        run: php bin/phpunit
-        
-     
