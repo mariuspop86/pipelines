@@ -7,11 +7,6 @@ on:
 jobs:
   bo_traitement_agent-test-run:
     runs-on: ubuntu-latest
-#    env:
-#      INTERNAL_API_URL: 'http://app.local'
-#      INTERNAL_API_APP_ID: 'app_id'
-#      INTERNAL_API_APP_KEY: 'app_key'
-#      APP_ENV: 'test'
 
     steps:
       - name: Checkout repo ${{ github.event.action }}
@@ -21,25 +16,25 @@ jobs:
           ref: ${{ github.event.client_payload.branch }}
           token: ${{ secrets.GH_PAT }}
 #
-      - name: Setup GitHub SSH
-        uses: MrSquaare/ssh-setup-action@v1
-        with:
-          host: github.com
-          private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
-          private-key-name: ssh_gitHub
+#      - name: Setup GitHub SSH
+#        uses: MrSquaare/ssh-setup-action@v1
+#        with:
+#          host: github.com
+#          private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
+#          private-key-name: ssh_gitHub
           
       - uses: satackey/action-docker-layer-caching@v0.0.11
         # Ignore the failure of a step and avoid terminating the job.
         continue-on-error: true
         
-      - name: Setup with tools
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.4
-          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, bcmath, gettext
-          ssh_key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
-          ssh_key_pub: ${{ secrets.SSH_GITHUB_PUBLIC_KEY }}
-          tools: composer
+#      - name: Setup with tools
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: 7.4
+#          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, bcmath, gettext
+#          ssh_key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
+#          ssh_key_pub: ${{ secrets.SSH_GITHUB_PUBLIC_KEY }}
+#          tools: composer
       
       - name: Get composer cache directory
         id: composer-cache
@@ -53,9 +48,16 @@ jobs:
           # key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
-
+      
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        uses: php-actions/composer@v6
+        with:
+          php_version: "7.4"
+          ssh_key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
+          ssh_key_pub: ${{ secrets.SSH_GITHUB_PUBLIC_KEY }}
+
+#      - name: Install dependencies
+#        run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Build and start containers
         run: docker-compose -f "docker-compose-test.yaml" up -d --build
