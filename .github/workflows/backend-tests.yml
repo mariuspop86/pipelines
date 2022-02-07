@@ -28,6 +28,10 @@ jobs:
           host: github.com
           private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
           private-key-name: ssh_gitHub
+          
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
 #
 #      - name: Debug
 #        run: pwd
@@ -89,6 +93,9 @@ jobs:
       - name: web server
         run: netstat -tunlp
         
+      - name: web server
+        run: ls -la ./vendor
+
       - name: run test
         run: php bin/phpunit
 #        run: docker-compose exec -tty app php bin/phpunit
