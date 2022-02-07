@@ -67,24 +67,29 @@ jobs:
 #          # Defaults to 8888
 #          http-port: 8088
 #
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+#      - name: Install dependencies
+#        run: composer install --prefer-dist --no-progress --no-suggest
 
-      - name: Generate JWT
-        run: bin/console lexik:jwt:generate-keypair --skip-if-exists
-      - name: Build containers
-        run: docker-compose build -f /home/runner/work/pipelines/pipelines/docker-compose-test.yaml
+#      - name: Generate JWT
+#        run: bin/console lexik:jwt:generate-keypair --skip-if-exists
+      - name: Build and start containers
+        run: docker-compose -f "docker-compose-test.yaml" up -d --build
+#        run: docker-compose build -f /home/runner/work/pipelines/pipelines/docker-compose-test.yaml
 #
-      - name: Start all container
-        run: docker-compose up -d -f /home/runner/work/pipelines/pipelines/docker-compose-test.yaml
+#      - name: Start all container
+#        run: docker-compose up -d -f /home/runner/work/pipelines/pipelines/docker-compose-test.yaml
 #        
 #      - name: Build containers
 #        run: make configure-app
-      - name: Build containers
+      - name: Generate Keys
         run: make generate-jwt-keys
 #
       - name: run test
         run: make run-test
+
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f "docker-compose-test.yaml" down
 #]
 #      - name: Install PHPUnit
 #        run: simple-phpunit install
