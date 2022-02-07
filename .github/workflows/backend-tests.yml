@@ -1,6 +1,5 @@
 name: Run back end tests
 on:
-  workflow_dispatch:
   repository_dispatch:
     types: [beprems/bo_traitement_agent]
 
@@ -15,26 +14,10 @@ jobs:
           repository: ${{ github.event.action }}
           ref: ${{ github.event.client_payload.branch }}
           token: ${{ secrets.GH_PAT }}
-#
-#      - name: Setup GitHub SSH
-#        uses: MrSquaare/ssh-setup-action@v1
-#        with:
-#          host: github.com
-#          private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
-#          private-key-name: ssh_gitHub
           
       - uses: satackey/action-docker-layer-caching@v0.0.11
         # Ignore the failure of a step and avoid terminating the job.
         continue-on-error: true
-        
-#      - name: Setup with tools
-#        uses: shivammathur/setup-php@v2
-#        with:
-#          php-version: 7.4
-#          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, bcmath, gettext
-#          ssh_key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
-#          ssh_key_pub: ${{ secrets.SSH_GITHUB_PUBLIC_KEY }}
-#          tools: composer
       
       - name: Get composer cache directory
         id: composer-cache
@@ -56,18 +39,17 @@ jobs:
           ssh_key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
           ssh_key_pub: ${{ secrets.SSH_GITHUB_PUBLIC_KEY }}
 
-#      - name: Install dependencies
-#        run: composer install --prefer-dist --no-progress --no-suggest
-
       - name: Build and start containers
         run: docker-compose -f "docker-compose-test.yaml" up -d --build
 
       - name: Generate Keys
+#        https://github:com/actions/runner/issues/241
         shell: 'script --return --quiet --command "bash {0}"'
         run: docker-compose exec app bin/console lexik:jwt:generate-keypair --skip-if-exists
 
       - name: run test
-        shell: 'script --return --quiet --command "bash {0}"' # hack to see the tty
+#        https://github:com/actions/runner/issues/241
+        shell: 'script --return --quiet --command "bash {0}"' 
         run: docker-compose exec app php bin/phpunit
 
       - name: Stop containers
