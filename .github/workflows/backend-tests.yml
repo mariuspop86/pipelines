@@ -33,8 +33,8 @@ jobs:
         # Ignore the failure of a step and avoid terminating the job.
         continue-on-error: true
 #
-#      - name: Debug
-#        run: pwd
+      - name: Debug
+        run: pwd
         
       - name: Setup with tools
         uses: shivammathur/setup-php@v2
@@ -93,12 +93,13 @@ jobs:
       - name: web server
         run: netstat -tunlp
         
-      - name: web server
-        run: ls -la ./vendor
+#      - name: web server
+#        run: ls -la /home/runner/work/pipelines/pipelines/vendor
 
       - name: run test
-        run: php bin/phpunit
-#        run: docker-compose exec -tty app php bin/phpunit
+        shell: 'script --return --quiet --command "bash {0}"'
+        run: docker-compose exec app php bin/phpunit
+#        run: php bin/phpunit
 
       - name: Stop containers
         if: always()
