@@ -73,10 +73,10 @@ jobs:
       - name: Generate JWT
         run: bin/console lexik:jwt:generate-keypair --skip-if-exists
       - name: Build containers
-        run: docker-compose build -f docker-compose-test.yaml
+        run: docker-compose build -f /home/runner/work/pipelines/pipelines/docker-compose-test.yaml
 #
       - name: Start all container
-        run: docker-compose up -d -f docker-compose-test.yaml
+        run: docker-compose up -d -f /home/runner/work/pipelines/pipelines/docker-compose-test.yaml
 #        
 #      - name: Build containers
 #        run: make configure-app
