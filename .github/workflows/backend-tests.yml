@@ -78,8 +78,8 @@ jobs:
       - name: Start all container
         run: docker-compose up -d -f docker-compose-test.yaml
 #        
-      - name: Build containers
-        run: make configure-app
+#      - name: Build containers
+#        run: make configure-app
       - name: Build containers
         run: make generate-jwt-keys
 #
