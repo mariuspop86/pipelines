@@ -80,12 +80,12 @@ jobs:
 #        run: docker-compose up -d -f /home/runner/work/pipelines/pipelines/docker-compose-test.yaml
 #        
       - name: Build containers
-        run: docker-compose exec app composer install
+        run: docker-compose exec -i app composer install
       - name: Generate Keys
-        run: docker-compose exec app bin/console lexik:jwt:generate-keypair --skip-if-exists
+        run: docker-compose exec -i app bin/console lexik:jwt:generate-keypair --skip-if-exists
 #
       - name: run test
-        run: docker-compose exec app php bin/phpunit
+        run: docker-compose exec  app php bin/phpunit
 
       - name: Stop containers
         if: always()
