@@ -86,9 +86,11 @@ jobs:
 #
       - name: Docker containers
         run: docker ps -a
+      - name: web server
+        run: netstat -tunlp?
         
       - name: run test
-        run: docker-compose exec  app php bin/phpunit
+        run: docker-compose exec -tty app php bin/phpunit
 
       - name: Stop containers
         if: always()
