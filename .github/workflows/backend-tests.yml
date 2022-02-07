@@ -32,14 +32,14 @@ jobs:
 #      - name: Debug
 #        run: pwd
         
-      - name: Setup with tools
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.4
-          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, bcmath, gettext
-          ssh_key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
-          ssh_key_pub: ${{ secrets.SSH_GITHUB_PUBLIC_KEY }}
-          tools: phpunit-bridge, symfony, symfony-cli, composer, composer-require-checker
+#      - name: Setup with tools
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: 7.4
+#          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo, bcmath, gettext
+#          ssh_key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
+#          ssh_key_pub: ${{ secrets.SSH_GITHUB_PUBLIC_KEY }}
+#          tools: phpunit-bridge, symfony, symfony-cli, composer, composer-require-checker
       
       - name: Get composer cache directory
         id: composer-cache
@@ -72,27 +72,27 @@ jobs:
 
       - name: Generate JWT
         run: bin/console lexik:jwt:generate-keypair --skip-if-exists
-#      - name: Build containers
-#        run: docker-compose build
+      - name: Build containers
+        run: docker-compose build -f docker-compose-test.yaml
 #
-#      - name: Start all container
-#        run: docker-compose up -d
+      - name: Start all container
+        run: docker-compose up -d -f docker-compose-test.yaml
 #        
-#      - name: Build containers
-#        run: make configure-app
-#      - name: Build containers
-#        run: make generate-jwt-keys
+      - name: Build containers
+        run: make configure-app
+      - name: Build containers
+        run: make generate-jwt-keys
 #
-#      - name: run test
-#        run: make run-test
+      - name: run test
+        run: make run-test
 #]
-      - name: Install PHPUnit
-        run: simple-phpunit install
-        
+#      - name: Install PHPUnit
+#        run: simple-phpunit install
+#        
 #      - name: Symfony web
 #        run: symfony serve --port 8080 -d
-      - name: web server
-        run: netstat -tunlp
+#      - name: web server
+#        run: netstat -tunlp
 #      - name: run curl
 #        run: curl -X http://localhost:8080/api/v1/administrators
 
@@ -101,8 +101,8 @@ jobs:
 #        with:
 #          args: http://[::1]:8080
 
-      - name: Run test
-        run: simple-phpunit
+#      - name: Run test
+#        run: simple-phpunit
 #        run: php bin/phpunit
         
      
