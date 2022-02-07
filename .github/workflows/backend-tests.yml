@@ -84,17 +84,19 @@ jobs:
 #        run: docker-compose up -d -f /home/runner/work/pipelines/pipelines/docker-compose-test.yaml
 #        
       - name: Build containers
-        run: docker-compose exec -i app composer install
+        shell: 'script --return --quiet --command "bash {0}"'
+        run: docker-compose exec app composer install
       - name: Generate Keys
-        run: docker-compose exec -i app bin/console lexik:jwt:generate-keypair --skip-if-exists
+        shell: 'script --return --quiet --command "bash {0}"'
+        run: docker-compose exec app bin/console lexik:jwt:generate-keypair --skip-if-exists
 #
       - name: Docker containers
         run: docker ps -a
       - name: web server
         run: netstat -tunlp
         
-#      - name: web server
-#        run: ls -la /home/runner/work/pipelines/pipelines/vendor
+      - name: web server
+        run: ls -la /home/runner/work/pipelines/pipelines/vendor
 
       - name: run test
         shell: 'script --return --quiet --command "bash {0}"'
