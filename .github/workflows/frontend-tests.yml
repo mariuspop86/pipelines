@@ -32,7 +32,6 @@ jobs:
       - name: Run npm install
         run: |
           npm ci
-          echo '${{ toJSON(env) }}'
 
       - name: Cypress run
         uses: cypress-io/github-action@v2

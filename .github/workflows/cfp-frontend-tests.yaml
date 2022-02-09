@@ -8,7 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REACT_APP_API_BASE_URL: 'https://core-front-pro-service-dev.wks-recette.com/api/v1'
-      REACT_APP_AUTH_TOKEN: 'x-auth-token'
+      REACT_APP_AUTH_TOKEN: 'X-Auth-Token'
+      REACT_APP_EXTENDED_AUTH_TOKEN: 'X-Extended-Token'
+      REACT_APP_LOCALSTORAGE_ITEM: 'token'
+      REACT_APP_PARTNER_CODE: ''
+      REACT_APP_MAIN_PERSON_TYPE: '1'
+      REACT_APP_WORKFLOW_STATUS_CLIENT: 'lbp'
+      REACT_APP_WEBSITE_NAME: "Front Pro"
+      REACT_APP_CUSTOMIZATION_MAP: '{"TOTAL":"total","TOTALENERGIES":"total"}'
 
     steps:
       - name: Checkout repo ${{ github.event.action }}
@@ -32,7 +39,6 @@ jobs:
       - name: Run npm install
         run: |
           npm ci
-          echo '${{ toJSON(env) }}'
 
       - name: Cypress run
         uses: cypress-io/github-action@v2
