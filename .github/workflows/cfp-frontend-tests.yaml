@@ -1,15 +1,22 @@
-name: Run front end tests
+name: Run core front pro frontend tests
 on:
   repository_dispatch:
-    types: [beprems/front_traitement_agent]
+    types: [beprems/core_front_pro_front]
 
 jobs:
   front-traitement-agent-cypress-run:
     runs-on: ubuntu-latest
     env:
-      REACT_APP_API_BASE_URL: 'https://back-bo-traitement-dev.wks-recette.com/api/v1'
+      REACT_APP_API_BASE_URL: 'https://core-front-pro-service-dev.wks-recette.com/api/v1'
       REACT_APP_AUTH_TOKEN: 'X-Auth-Token'
-      
+      REACT_APP_EXTENDED_AUTH_TOKEN: 'X-Extended-Token'
+      REACT_APP_LOCALSTORAGE_ITEM: 'token'
+      REACT_APP_PARTNER_CODE: ''
+      REACT_APP_MAIN_PERSON_TYPE: '1'
+      REACT_APP_WORKFLOW_STATUS_CLIENT: 'lbp'
+      REACT_APP_WEBSITE_NAME: "Front Pro"
+      REACT_APP_CUSTOMIZATION_MAP: '{"TOTAL":"total","TOTALENERGIES":"total"}'
+
     steps:
       - name: Checkout repo ${{ github.event.action }}
         uses: actions/checkout@v2
@@ -17,18 +24,18 @@ jobs:
           repository: ${{ github.event.action }}
           ref: ${{ github.event.client_payload.branch }}
           token: ${{ secrets.GH_PAT }}
-      
+
       - uses: actions/setup-node@v2
-        with: 
+        with:
           node-version: '14'
-      
+
       - name: Setup GitHub SSH
         uses: MrSquaare/ssh-setup-action@v1
         with:
           host: github.com
           private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
           private-key-name: ssh_gitHub
-      
+
       - name: Run npm install
         run: |
           npm ci
