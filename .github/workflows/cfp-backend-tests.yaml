@@ -1,4 +1,4 @@
-name: Run back end tests
+name: Run core front pro backend tests
 on:
   repository_dispatch:
     types: [beprems/core_front_pro_service]

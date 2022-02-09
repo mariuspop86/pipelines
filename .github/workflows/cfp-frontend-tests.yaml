@@ -1,0 +1,42 @@
+name: Run core front pro frontend tests
+on:
+  repository_dispatch:
+    types: [beprems/core_front_pro_front]
+
+jobs:
+  front-traitement-agent-cypress-run:
+    runs-on: ubuntu-latest
+    env:
+      REACT_APP_API_BASE_URL: 'https://core-front-pro-service-dev.wks-recette.com/api/v1'
+      REACT_APP_AUTH_TOKEN: 'x-auth-token'
+
+    steps:
+      - name: Checkout repo ${{ github.event.action }}
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event.action }}
+          ref: ${{ github.event.client_payload.branch }}
+          token: ${{ secrets.GH_PAT }}
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Setup GitHub SSH
+        uses: MrSquaare/ssh-setup-action@v1
+        with:
+          host: github.com
+          private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
+          private-key-name: ssh_gitHub
+
+      - name: Run npm install
+        run: |
+          npm ci
+          echo '${{ toJSON(env) }}'
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          build: npm run build
+          start: npm start
+          wait-on: 'http://localhost:3000'
