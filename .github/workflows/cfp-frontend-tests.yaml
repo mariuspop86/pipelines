@@ -4,7 +4,7 @@ on:
     types: [beprems/core_front_pro_front]
 
 jobs:
-  front-traitement-agent-cypress-run:
+  cfp-frontend-cypress-run:
     runs-on: ubuntu-latest
     env:
       REACT_APP_API_BASE_URL: 'https://core-front-pro-service-dev.wks-recette.com/api/v1'
