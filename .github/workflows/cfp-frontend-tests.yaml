@@ -37,12 +37,7 @@ jobs:
           private-key-name: ssh_gitHub
 
       - name: Run npm install
-        run: |
-          npm ci
+        run: npm ci
 
-      - name: Cypress run
-        uses: cypress-io/github-action@v2
-        with:
-          build: npm run build
-          start: npm start
-          wait-on: 'http://localhost:3000'
+      - name: Run test
+        run: npm run test-ci
