@@ -7,6 +7,8 @@ jobs:
   front-traitement-agent-cypress-run:
     runs-on: ubuntu-latest
     env:
+      VITE_API_BASE_URL: 'https://back-bo-traitement-dev.wks-recette.com/api/v1'
+      VITE_AUTH_TOKEN: 'X-Auth-Token'
       REACT_APP_API_BASE_URL: 'https://back-bo-traitement-dev.wks-recette.com/api/v1'
       REACT_APP_AUTH_TOKEN: 'X-Auth-Token'
       
