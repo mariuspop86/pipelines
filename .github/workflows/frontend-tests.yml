@@ -41,3 +41,11 @@ jobs:
           build: npm run build
           start: npm start
           wait-on: 'http://localhost:3000'
+          
+      - name: Upload failed tests screenshots
+        uses: actions/upload-artifact@v3.1.0
+        if: failure()
+        with:
+          name: failed-tests-screenshots
+          path: cypress/.results/screenshots
+          retention-days: 1
