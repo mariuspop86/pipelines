@@ -39,8 +39,8 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           build: npm run build
-          start: npm start
-          wait-on: 'http://localhost:3000'
+          start: npm run preview
+          wait-on: 'http://localhost:4173'
           
       - name: Upload failed tests screenshots
         uses: actions/upload-artifact@v3.1.0
