@@ -30,10 +30,6 @@ jobs:
           host: github.com
           private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
           private-key-name: ssh_gitHub
-      
-      - name: Run npm install
-        run: |
-          npm ci
 
       - name: Cypress run
         uses: cypress-io/github-action@v4
