@@ -49,5 +49,5 @@ jobs:
           
       - name: Create tag and push it  
         run: |
-          git tag -a ${{ steps.tag_version.increment_tag.increment_tag }} $(git log -1 --pretty=%H) -m "$(git log -1 --pretty=%s)"
-          git push origin ${{ steps.tag_version.increment_tag.increment_tag }}
+          git tag -a ${{ steps.increment_tag.outputs.increment_tag }} $(git log -1 --pretty=%H) -m "$(git log -1 --pretty=%s)"
+          git push origin ${{ steps.increment_tag.outputs.increment_tag }}
