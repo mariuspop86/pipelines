@@ -25,18 +25,20 @@ jobs:
       - name: Get commit message
         id: commit_msg
         run: |
-          msg=$(git log -1 --pretty=%B)
-          echo "::set-output name=new_tag::$msg"
-               
+          msg=$(git log -1 --pretty=%B | sed 's/\([^:]*\).*/\1/')
+          echo "::set-output name=bump::$msg"
+          echo "found type: $msg"
+          
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
            node-version: '16'
       - name: Increment tag
+        if: ${{ contains(fromJson('["patch", "minor", "major"]'), steps.commit_msg.outputs.bump) }}
         id: increment_tag
         run: |
           npm install -g semver
-          new_version=$(semver ${{ steps.tag_version.outputs.new_tag }} -i patch)
+          new_version=$(semver ${{ steps.tag_version.outputs.new_tag }} -i ${{ steps.commit_msg.outputs.bump }})
           echo "::set-output name=increment_tag::$new_version"
       
-      - run: echo ${{ toJSON(github) }}
+      - run: echo ${{ ${{ steps.increment_tag.outputs.increment_tag }} }}
