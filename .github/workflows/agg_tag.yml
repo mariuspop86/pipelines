@@ -47,6 +47,7 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
           
-      - name: Create tag and push it    
+      - name: Create tag and push it  
+        run: |
           git tag -a ${{ steps.tag_version.increment_tag.increment_tag }} $(git log -1 --pretty=%H) -m "$(git log -1 --pretty=%s)"
           git push origin ${{ steps.tag_version.increment_tag.increment_tag }}
