@@ -1,0 +1,44 @@
+name: Add new tag
+
+on:
+  pull_request:
+  #    types:
+  #      - closed
+
+  workflow_dispatch:
+
+jobs:
+  add_tag:
+    #    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get current version
+        run: git describe --tags --abbrev=0
+          
+          #      - name: Bump version and push tag
+          #        id: tag_version
+          #        uses: mathieudutour/github-tag-action@v6.0
+          #        with:
+          #          github_token:
+          #            ${{ secrets.GITHUB_TOKEN }}
+          #          default_bump: false
+          #          dry_run: true
+          #          append_to_pre_release_tag: ""
+          #          create_annotated_tag: true
+          #          release_branches: 1.X.X,*
+          
+          #      - name: Create a GitHub release
+          #        uses: ncipollo/release-action@v1
+          #        with:
+          #          tag: ${{ steps.tag_version.outputs.new_tag }}
+          #          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          #          body: ${{ steps.tag_version.outputs.changelog }}
+
+#      - name: Send slack notification
+#        run: |
+#          curl -X POST -H 'Content-type: application/json' \
+#            --data '{"text":"*${{github.actor}}* added a new tag ${{github.server_url}}/${{github.repository}}/releases/tag/${{steps.tag_version.outputs.new_tag}}"}' \
+#            https://hooks.slack.com/services/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
