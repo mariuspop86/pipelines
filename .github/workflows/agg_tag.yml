@@ -17,7 +17,7 @@ jobs:
         with:
           fetch-depth: 0
       
-      - run: git checkout ${{ github.head_ref }}
+      - run: git checkout ${{ github.ref_name }}
         
       - name: Get version
         id: tag_version
