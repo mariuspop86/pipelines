@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      
+      - run: echo '${{ toJSON(github) }}'
       - run: git checkout ${{ github.ref_name }}
         
       - name: Get version
