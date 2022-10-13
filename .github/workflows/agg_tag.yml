@@ -21,13 +21,11 @@ jobs:
         run: |
           version=$(git describe --tags --abbrev=0)
           echo "::set-output name=new_tag::$version"
-          
-      - run: echo ${{ steps.tag_version.outputs.new_tag }}
                
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
            node-version: '16'
-      - run: |
-          npm install semver
+        run: |
+          npm install -g semver
           semver ${{ steps.tag_version.outputs.new_tag }} -i patch
