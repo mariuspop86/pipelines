@@ -14,9 +14,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: Get current version
-        run: git log --pretty=oneline -1 && git describe --tags --abbrev=0
+        with:
+          fetch-depth: 0
+      - run: git log --pretty=oneline -1 && git describe --tags --abbrev=0
           
           #      - name: Bump version and push tag
           #        id: tag_version
