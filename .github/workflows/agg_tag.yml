@@ -26,6 +26,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
            node-version: '16'
-        run: |
+      - run: |
           npm install -g semver
           semver ${{ steps.tag_version.outputs.new_tag }} -i patch
