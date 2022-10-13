@@ -21,6 +21,12 @@ jobs:
         run: |
           version=$(git describe --tags --abbrev=0)
           echo "::set-output name=new_tag::$version"
+      
+      - name: Get commit message
+        id: commit_msg
+        run: |
+          msg=$(git log -1 --pretty=%B)
+          echo "::set-output name=new_tag::$msg"
                
       - name: Use Node.js
         uses: actions/setup-node@v3
