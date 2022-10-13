@@ -41,4 +41,4 @@ jobs:
           new_version=$(semver ${{ steps.tag_version.outputs.new_tag }} -i ${{ steps.commit_msg.outputs.bump }})
           echo "::set-output name=increment_tag::$new_version"
       
-      - run: echo ${{ ${{ steps.increment_tag.outputs.increment_tag }} }}
+      - run: echo ${{ steps.increment_tag.outputs.increment_tag }}
