@@ -19,8 +19,8 @@ jobs:
       - name: Get version
         id: tag_version
         run: |
-          git describe --tags --abbrev=0
-          echo "::set-output name=new_tag::(git describe --tags --abbrev=0)?"
+          version=$(git describe --tags --abbrev=0)
+          echo "::set-output name=new_tag::$version"
           
       - run: echo ${{ steps.tag_version.outputs.new_tag }}
           
