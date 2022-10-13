@@ -41,5 +41,5 @@ jobs:
           npm install -g semver
           new_version=$(semver ${{ steps.tag_version.outputs.new_tag }} -i ${{ steps.commit_msg.outputs.bump }})
           echo "::set-output name=increment_tag::$new_version"
-      
-      - run: echo ${{ steps.increment_tag.outputs.increment_tag }}
+          git tag -a v$new_version $(git log -1 --pretty=%H) -m "$(git log -1 --pretty=%s)"
+          git push origin v$new_version
