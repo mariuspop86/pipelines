@@ -7,6 +7,8 @@ jobs:
   front-traitement-agent-cypress-run:
     runs-on: ubuntu-latest
     env:
+      VITE_API_BASE_URL: 'https://back-bo-traitement-dev.wks-recette.com/api/v1'
+      VITE_AUTH_TOKEN: 'X-Auth-Token'
       REACT_APP_API_BASE_URL: 'https://back-bo-traitement-dev.wks-recette.com/api/v1'
       REACT_APP_AUTH_TOKEN: 'X-Auth-Token'
       
@@ -28,14 +30,18 @@ jobs:
           host: github.com
           private-key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
           private-key-name: ssh_gitHub
-      
-      - name: Run npm install
-        run: |
-          npm ci
 
       - name: Cypress run
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v4
         with:
           build: npm run build
-          start: npm start
-          wait-on: 'http://localhost:3000'
+          start: npm run preview
+          wait-on: 'http://localhost:4173'
+          
+      - name: Upload failed tests screenshots
+        uses: actions/upload-artifact@v3.1.0
+        if: failure()
+        with:
+          name: failed-tests-screenshots
+          path: cypress/.results/screenshots
+          retention-days: 1

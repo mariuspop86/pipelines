@@ -4,13 +4,13 @@ on:
     types: [beprems/core_front_pro_front]
 
 jobs:
-  front-traitement-agent-cypress-run:
+  cfp-frontend-cypress-run:
     runs-on: ubuntu-latest
     env:
       REACT_APP_API_BASE_URL: 'https://core-front-pro-service-dev.wks-recette.com/api/v1'
       REACT_APP_AUTH_TOKEN: 'X-Auth-Token'
       REACT_APP_EXTENDED_AUTH_TOKEN: 'X-Extended-Token'
-      REACT_APP_LOCALSTORAGE_ITEM: 'token'
+      REACT_APP_LOCALSTORAGE_ITEM: 'persist:core-fp'
       REACT_APP_PARTNER_CODE: ''
       REACT_APP_MAIN_PERSON_TYPE: '1'
       REACT_APP_WORKFLOW_STATUS_CLIENT: 'lbp'

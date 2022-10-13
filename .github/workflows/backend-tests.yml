@@ -36,6 +36,7 @@ jobs:
         uses: php-actions/composer@v6
         with:
           php_version: "7.4"
+          php_extensions: mcrypt
           ssh_key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
           ssh_key_pub: ${{ secrets.SSH_GITHUB_PUBLIC_KEY }}
 
@@ -46,6 +47,12 @@ jobs:
 #        https://github:com/actions/runner/issues/241
         shell: 'script --return --quiet --command "bash {0}"'
         run: docker-compose exec app bin/console lexik:jwt:generate-keypair --skip-if-exists
+
+      - name: Configure Database
+        shell: 'script --return --quiet --command "bash {0}"'
+        run: |
+          docker-compose exec app bin/console doctrine:database:create --if-not-exists
+          docker-compose exec app bin/console doctrine:migrations:migrate --no-interaction
 
       - name: run test
 #        https://github:com/actions/runner/issues/241

@@ -4,7 +4,7 @@ on:
     types: [beprems/core_front_pro_service]
 
 jobs:
-  bo_traitement_agent-test-run:
+  cfp-backend-test-run:
     runs-on: ubuntu-latest
 
     steps:
@@ -36,6 +36,7 @@ jobs:
         uses: php-actions/composer@v6
         with:
           php_version: "7.4"
+          php_extensions: mcrypt
           ssh_key: ${{ secrets.SSH_GITHUB_PRIVATE_KEY }}
           ssh_key_pub: ${{ secrets.SSH_GITHUB_PUBLIC_KEY }}
 
