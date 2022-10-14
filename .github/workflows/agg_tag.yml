@@ -63,4 +63,5 @@ jobs:
         if: ${{ !contains(fromJson('["patch", "minor", "major"]'), steps.commit_msg.outputs.bump) }}
         run: |
           echo "## No tag created " >> $GITHUB_STEP_SUMMARY
-          echo "If you want to create a tag please start your commit message with one of `patch:`, `minor:`, `major:`" >> $GITHUB_STEP_SUMMARY
+          echo "If you want to create a tag please start your commit message with one of \"patch:\", \"minor:\", 
+          \"major:\"" >> $GITHUB_STEP_SUMMARY
