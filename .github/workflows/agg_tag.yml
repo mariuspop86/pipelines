@@ -39,6 +39,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
            node-version: '16'
+           
       - name: Increment tag
         if: ${{ contains(fromJson('["patch", "minor", "major"]'), env.bump) }}
         id: increment_tag
