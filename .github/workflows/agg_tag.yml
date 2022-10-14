@@ -22,13 +22,18 @@ jobs:
         id: tag_version
         run: |
           version=$(git describe --tags --abbrev=0)
-          echo "::set-output name=new_tag::$version"
+          echo "::set-output name=old_tag::$version"
       
       - name: Get commit message
         id: commit_msg
         run: |
           msg=$(git log -1 --pretty=%B | sed 's/\([^:]*\).*/\1/')
           echo "::set-output name=bump::$msg"
+
+      - name: Setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
           
       - name: Use Node.js
         uses: actions/setup-node@v3
@@ -39,15 +44,17 @@ jobs:
         id: increment_tag
         run: |
           npm install -g semver
-          new_version=$(semver ${{ steps.tag_version.outputs.new_tag }} -i ${{ steps.commit_msg.outputs.bump }})
+          new_version=$(semver ${{ steps.tag_version.outputs.old_tag }} -i ${{ steps.commit_msg.outputs.bump }})
           echo "::set-output name=increment_tag::v$new_version"
-          
-      - name: Setup git config
-        run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "<>"
-          
-      - name: Create tag and push it  
+  
+      - name: Create tag and push it
+        if: ${{ contains(fromJson('["patch", "minor", "major"]'), steps.commit_msg.outputs.bump) }}
         run: |
           git tag -a ${{ steps.increment_tag.outputs.increment_tag }} $(git log -1 --pretty=%H) -m "$(git log -1 --pretty=%s)"
           git push origin ${{ steps.increment_tag.outputs.increment_tag }}
+      
+      - name: Build summary
+        if: ${{ always() }}
+        run: |
+          echo "## New tag created ${{ steps.increment_tag.outputs.increment_tag }} :tada:" >> $GITHUB_STEP_SUMMARY
+          echo "URL: ${{github.server_url}}/${{github.repository}}/releases/tag/${{steps.increment_tag.outputs.increment_tag}}" >> $GITHUB_STEP_SUMMARY
