@@ -22,13 +22,13 @@ jobs:
         id: tag_version
         run: |
           version=$(git describe --tags --abbrev=0)
-          echo "::set-output name=old_tag::$version"
+          echo "old_tag=$version" >> $GITHUB_ENV
       
       - name: Get commit message
         id: commit_msg
         run: |
           msg=$(git log -1 --pretty=%B | sed 's/\([^:]*\).*/\1/')
-          echo "::set-output name=bump::$msg"
+          echo "bump=$msg" >> $GITHUB_ENV
 
       - name: Setup git config
         run: |
@@ -40,27 +40,27 @@ jobs:
         with:
            node-version: '16'
       - name: Increment tag
-        if: ${{ contains(fromJson('["patch", "minor", "major"]'), steps.commit_msg.outputs.bump) }}
+        if: ${{ contains(fromJson('["patch", "minor", "major"]'), env.bump) }}
         id: increment_tag
         run: |
           npm install -g semver
-          new_version=$(semver ${{ steps.tag_version.outputs.old_tag }} -i ${{ steps.commit_msg.outputs.bump }})
-          echo "::set-output name=increment_tag::v$new_version"
-  
+          new_version=$(semver ${{ env.old_tag }} -i ${{ env.bump }})
+          echo "increment_tag=v$new_version" >> $GITHUB_ENV
+          
       - name: Create tag and push it
-        if: ${{ contains(fromJson('["patch", "minor", "major"]'), steps.commit_msg.outputs.bump) }}
+        if: ${{ contains(fromJson('["patch", "minor", "major"]'), env.bump) }}
         run: |
-          git tag -a ${{ steps.increment_tag.outputs.increment_tag }} $(git log -1 --pretty=%H) -m "$(git log -1 --pretty=%s)"
-          git push origin ${{ steps.increment_tag.outputs.increment_tag }}
+          git tag -a ${{ env.increment_tag }} $(git log -1 --pretty=%H) -m "$(git log -1 --pretty=%s)"
+          git push origin ${{ env.increment_tag }}
       
       - name: Build tag summary
-        if: ${{ contains(fromJson('["patch", "minor", "major"]'), steps.commit_msg.outputs.bump) }}
+        if: ${{ contains(fromJson('["patch", "minor", "major"]'), env.bump) }}
         run: |
-          echo "## New tag created ${{ steps.increment_tag.outputs.increment_tag }} :tada:" >> $GITHUB_STEP_SUMMARY
-          echo "URL: ${{github.server_url}}/${{github.repository}}/releases/tag/${{steps.increment_tag.outputs.increment_tag}}" >> $GITHUB_STEP_SUMMARY
+          echo "## New tag created ${{ env.increment_tag }} :tada:" >> $GITHUB_STEP_SUMMARY
+          echo "URL: ${{github.server_url}}/${{github.repository}}/releases/tag/${{env.increment_tag}}" >> $GITHUB_STEP_SUMMARY
 
       - name: Build no tag summary
-        if: ${{ !contains(fromJson('["patch", "minor", "major"]'), steps.commit_msg.outputs.bump) }}
+        if: ${{ !contains(fromJson('["patch", "minor", "major"]'), env.bump) }}
         run: |
           echo "## No tag created " >> $GITHUB_STEP_SUMMARY
           echo "If you want to create a tag please start your commit message with one of \"patch:\", \"minor:\", \
