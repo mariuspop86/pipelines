@@ -53,8 +53,14 @@ jobs:
           git tag -a ${{ steps.increment_tag.outputs.increment_tag }} $(git log -1 --pretty=%H) -m "$(git log -1 --pretty=%s)"
           git push origin ${{ steps.increment_tag.outputs.increment_tag }}
       
-      - name: Build summary
-        if: ${{ always() }}
+      - name: Build tag summary
+        if: ${{ contains(fromJson('["patch", "minor", "major"]'), steps.commit_msg.outputs.bump) }}
         run: |
           echo "## New tag created ${{ steps.increment_tag.outputs.increment_tag }} :tada:" >> $GITHUB_STEP_SUMMARY
           echo "URL: ${{github.server_url}}/${{github.repository}}/releases/tag/${{steps.increment_tag.outputs.increment_tag}}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Build no tag summary
+        if: ${{ !contains(fromJson('["patch", "minor", "major"]'), steps.commit_msg.outputs.bump) }}
+        run: |
+          echo "## No tag created " >> $GITHUB_STEP_SUMMARY
+          echo "If you want to create a tag please start your commit message with one of `patch:`, `minor:`, `major:`" >> $GITHUB_STEP_SUMMARY
