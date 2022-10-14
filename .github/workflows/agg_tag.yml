@@ -64,5 +64,5 @@ jobs:
         run: |
           echo "## No tag created " >> $GITHUB_STEP_SUMMARY
           echo "If you want to create a tag please start your commit message with one of \"patch:\", \"minor:\", \
-          \"major:\" followed by the commit message". >> $GITHUB_STEP_SUMMARY
+          \"major:\" followed by the commit message." >> $GITHUB_STEP_SUMMARY
           echo "Ex. git commit -m \"patch: KC-1234 fixed typo\" " >> $GITHUB_STEP_SUMMARY
