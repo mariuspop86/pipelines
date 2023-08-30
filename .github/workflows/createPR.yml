@@ -9,26 +9,19 @@ on:
   workflow_dispatch:
 
 jobs:
-  if_merged:
+  if_merged_to_release:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo The PR was merged
+      - run: echo "${{ toJson(github) }}"
       - uses: actions/checkout@v3
+      - name: Create pull request
+        id: create_pr
+        run: echo "pr=$(gh pr create -B monolith_pitech -H release --title 'Merge release into monolith_pitech' --body 'Created by Github action' -l 'Release' -r 'mariuspop86')" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v5
-        with:
-          branch: monolith_pitech
-#          base: monolith_pitech
-          commit-message: 'Merge Release to monolith_pitech'
-          title: 'Merge Release to monolith_pitech'
-          labels: 'update Monolith Pitech'
-#          assignees:
-      - name: Check outputs
-        if: ${{ steps.cpr.outputs.pull-request-number }}
-        run: |
-          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
-          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
+      - run: |
+          echo "Create PR: "${{env.pr}}"" >> $GITHUB_STEP_SUMMARY
+
+      
