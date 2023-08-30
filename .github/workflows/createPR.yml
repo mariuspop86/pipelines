@@ -16,11 +16,11 @@ jobs:
       - uses: actions/checkout@v3
       - name: Create pull request
         id: create_pr
-        run: echo "$(gh pr create -B monolith_pitech -H release --title 'Merge release into monolith_pitech' --body 'Created by Github action' -l 'release to monolith pitech' -r 'mariuspop86')" >> $GITHUB_STEP_SUMMARY
+        run: echo "pr=$(gh pr create -B monolith_pitech -H release --title 'Merge release into monolith_pitech' --body 'Created by Github action' -l 'release to monolith pitech' -r 'mariuspop86')" >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - run: |
-          echo "Create PR: " >> $GITHUB_STEP_SUMMARY
+          echo "Create PR: "${{env.pr}}"" >> $GITHUB_STEP_SUMMARY
 
       
