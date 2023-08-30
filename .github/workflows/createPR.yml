@@ -15,8 +15,8 @@ jobs:
     steps:
       - name: create pull request
         run: gh pr create -B monolith_pitech -H release --title 'Merge release into monolith_pitech' --body 'Created by Github action'
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - run: |
           echo The PR was merged
