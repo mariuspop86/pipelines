@@ -13,32 +13,57 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - run: git checkout ${{ github.head_ref }}
+        
+      - name: Get version
+        id: tag_version
+        run: |
+          version=$(git describe --tags --abbrev=0)
+          echo "old_tag=$version" >> $GITHUB_ENV
+      
+      - name: Get commit message
+        id: commit_msg
+        run: |
+          msg=$(git log -1 --pretty=%B | sed 's/\([^:]*\).*/\1/')
+          echo "bump=$msg" >> $GITHUB_ENV
 
-      - name: Get current version
-        run: git log --pretty=oneline -1 && git describe --tags --abbrev=0
+      - name: Setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
           
-          #      - name: Bump version and push tag
-          #        id: tag_version
-          #        uses: mathieudutour/github-tag-action@v6.0
-          #        with:
-          #          github_token:
-          #            ${{ secrets.GITHUB_TOKEN }}
-          #          default_bump: false
-          #          dry_run: true
-          #          append_to_pre_release_tag: ""
-          #          create_annotated_tag: true
-          #          release_branches: 1.X.X,*
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+           node-version: '16'
+           
+      - name: Increment tag
+        if: ${{ contains(fromJson('["patch", "minor", "major"]'), env.bump) }}
+        id: increment_tag
+        run: |
+          npm install -g semver
+          new_version=$(semver ${{ env.old_tag }} -i ${{ env.bump }})
+          echo "increment_tag=v$new_version" >> $GITHUB_ENV
           
-          #      - name: Create a GitHub release
-          #        uses: ncipollo/release-action@v1
-          #        with:
-          #          tag: ${{ steps.tag_version.outputs.new_tag }}
-          #          name: Release ${{ steps.tag_version.outputs.new_tag }}
-          #          body: ${{ steps.tag_version.outputs.changelog }}
+      - name: Create tag and push it
+        if: ${{ contains(fromJson('["patch", "minor", "major"]'), env.bump) }}
+        run: |
+          git tag -a ${{ env.increment_tag }} $(git log -1 --pretty=%H) -m "$(git log -1 --pretty=%s)"
+          git push origin ${{ env.increment_tag }}
+      
+      - name: Build tag summary
+        if: ${{ contains(fromJson('["patch", "minor", "major"]'), env.bump) }}
+        run: |
+          echo "## New tag created ${{ env.increment_tag }} :tada:" >> $GITHUB_STEP_SUMMARY
+          echo "URL: ${{github.server_url}}/${{github.repository}}/releases/tag/${{env.increment_tag}}" >> $GITHUB_STEP_SUMMARY
 
-#      - name: Send slack notification
-#        run: |
-#          curl -X POST -H 'Content-type: application/json' \
-#            --data '{"text":"*${{github.actor}}* added a new tag ${{github.server_url}}/${{github.repository}}/releases/tag/${{steps.tag_version.outputs.new_tag}}"}' \
-#            https://hooks.slack.com/services/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
+      - name: Build no tag summary
+        if: ${{ !contains(fromJson('["patch", "minor", "major"]'), env.bump) }}
+        run: |
+          echo "## No tag created " >> $GITHUB_STEP_SUMMARY
+          echo "If you want to create a tag please start your commit message with one of \"patch:\", \"minor:\", \
+          \"major:\" followed by the commit message." >> $GITHUB_STEP_SUMMARY
+          echo "Ex. git commit -m \"patch: KC-1234 fixed typo\" " >> $GITHUB_STEP_SUMMARY
