@@ -13,6 +13,7 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: create pull request
         run: gh pr create -B monolith_pitech -H release --title 'Merge release into monolith_pitech' --body 'Created by Github action'
         env:
@@ -20,4 +21,4 @@ jobs:
 
       - run: |
           echo The PR was merged
-      - uses: actions/checkout@v3
+      
