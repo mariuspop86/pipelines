@@ -13,7 +13,7 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ fromJSON(github) }}
+      - run: echo "${{ fromJSON(github) }}"
       - uses: actions/checkout@v3
       - name: Create pull request
         id: create_pr
