@@ -1,0 +1,27 @@
+name: Merge Release to monolith_pitech
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - release
+  workflow_dispatch:
+
+jobs:
+  if_merged:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo The PR was merged
+      - uses: actions/checkout@v3
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          base: release
+          commit-message: 'Merge Release to monolith_pitech'
+          title: 'Merge Release to monolith_pitech'
+          labels: 'update Monolith Pitech'
+#          assignees:
