@@ -21,8 +21,8 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v5
         with:
-          branch: test-release
-          base: monolith_pitech
+          branch: monolith_pitech
+#          base: monolith_pitech
           commit-message: 'Merge Release to monolith_pitech'
           title: 'Merge Release to monolith_pitech'
           labels: 'update Monolith Pitech'
